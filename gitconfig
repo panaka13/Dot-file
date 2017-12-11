@@ -1,0 +1,7 @@
+[user]
+	name = nhatkhang589@gmail.com
+	email = nhatkhang589@gmail.com
+[push]
+	default = simple
+[mergetool]
+	keepBackup = false
