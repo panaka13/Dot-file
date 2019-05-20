@@ -1,7 +1,8 @@
 [user]
-	name = nhatkhang589@gmail.com
 	email = nhatkhang589@gmail.com
-[push]
-	default = simple
+	name = panaka_13
+[alias]
+	st = status
+	graph = log --all --oneline --graph
 [mergetool]
 	keepBackup = false
