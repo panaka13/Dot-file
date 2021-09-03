@@ -12,6 +12,7 @@ Plugin 'Valloric/YouCompleteMe'
 " Plugin 'artur-shaik/vim-javacomplete2'
 Plugin 'vim-latex/vim-latex'
 Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'vim-syntastic/syntastic'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -40,10 +41,10 @@ set bg=dark
 inoremap `` <esc>
 nnoremap ; :
 
-inoremap <c-n> <esc>o
-inoremap <c-p> <esc>ko
+inoremap <c-j><c-j> <c-o>o
+inoremap <c-k><c-k> <c-o><s-o>
 inoremap <c-e> <end>
-inoremap <c-b> <home>
+inoremap <c-b> <c-o>^
 inoremap jj <esc>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""" python """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -53,13 +54,13 @@ let g:python_recommended_style = 0
 autocmd FileType python inoremap<c-x> <c-o>:IndentGuidesToggle<CR>
 autocmd FileType python nnoremap<c-x> :IndentGuidesToggle<CR>
 " comment line, selection with Ctrl-N,Ctrl-N
-au BufEnter *.py nnoremap  <C-N><C-N>    mn:s/^\(\s*\)#*\(.*\)/\1#\2/ge<CR>:noh<CR>`n
-au BufEnter *.py inoremap  <C-N><C-N>    <C-O>mn<C-O>:s/^\(\s*\)#*\(.*\)/\1#\2/ge<CR><C-O>:noh<CR><C-O>`n
-au BufEnter *.py vnoremap  <C-N><C-N>    mn:s/^\(\s*\)#*\(.*\)/\1#\2/ge<CR>:noh<CR>gv`n
+autocmd BufEnter *.py nnoremap  <C-N><C-N>    mn:s/^\(\s*\)#*\(.*\)/\1#\2/ge<CR>:noh<CR>`n
+autocmd BufEnter *.py inoremap  <C-N><C-N>    <C-O>mn<C-O>:s/^\(\s*\)#*\(.*\)/\1#\2/ge<CR><C-O>:noh<CR><C-O>`n
+autocmd BufEnter *.py vnoremap  <C-N><C-N>    mn:s/^\(\s*\)#*\(.*\)/\1#\2/ge<CR>:noh<CR>gv`n
 " uncomment line, selection with Ctrl-N,N
-au BufEnter *.py nnoremap  <C-N>n     mn:s/^\(\s*\)#\([^ ]\)/\1\2/ge<CR>:s/^#$//ge<CR>:noh<CR>`n
-au BufEnter *.py inoremap  <C-N>n     <C-O>mn<C-O>:s/^\(\s*\)#\([^ ]\)/\1\2/ge<CR><C-O>:s/^#$//ge<CR><C-O>:noh<CR><C-O>`n
-au BufEnter *.py vnoremap  <C-N>n     mn:s/^\(\s*\)#\([^ ]\)/\1\2/ge<CR>gv:s/#\n/\r/ge<CR>:noh<CR>gv`n
+autocmd BufEnter *.py nnoremap  <C-N>n     mn:s/^\(\s*\)#\([^ ]\)/\1\2/ge<CR>:s/^#$//ge<CR>:noh<CR>`n
+autocmd BufEnter *.py inoremap  <C-N>n     <C-O>mn<C-O>:s/^\(\s*\)#\([^ ]\)/\1\2/ge<CR><C-O>:s/^#$//ge<CR><C-O>:noh<CR><C-O>`n
+autocmd BufEnter *.py vnoremap  <C-N>n     mn:s/^\(\s*\)#\([^ ]\)/\1\2/ge<CR>gv:s/#\n/\r/ge<CR>:noh<CR>gv`n
 
 
 " template file
@@ -107,12 +108,14 @@ let g:closetag_close_shortcut = '<leader>>'
 
 " ycm
 autocmd FileType cpp let g:ycm_global_ycm_extra_conf = '/home/panaka_13/.vim/bundle/YouCompleteMe/config/ycm_extra_conf.py'
+autocmd FileType java let g:ycm_global_ycm_extra_conf = '/home/panaka_13/.vim/bundle/YouCompleteMe/config/java_ycm_extra_conf.py'
 let g:ycm_server_python_interpreter = 'python3'
 let g:ycm_min_num_of_chars_for_completion = 2 " disable identifier completion
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_max_diagnostics_to_display = 0
 let g:ycm_enable_diagnostic_highlighting = 0
 let g:ycm_always_populate_location_list = 1
+" let g:ycm_filetype_blacklist = {'python': 1}
 map <F4> :YcmCompleter FixIt<CR>
 map <c-g> :YcmCompleter GoTo<CR>
 
@@ -125,9 +128,6 @@ autocmd BufEnter *.rb set colorcolumn=100 " ruby: 100 width text
 autocmd BufEnter *.cpp,*.h set colorcolumn=120
 autocmd FileType java set colorcolumn=100 " java: 100 width per line
 
-imap <C-K> %! clang-format %
-map <C-K> %! clang-format
-
 " highlight search
 set hlsearch
 
@@ -135,8 +135,17 @@ map <F3> :echo 'Current time is ' . strftime('%c')<CR>
 map <F2> :Vexplore<CR>
 
 " latex - vim-latex
-autocmd FileType tex let g:Tex_Env_bmatrix = "\\begin{bmatrix}\<CR><++>\<CR>\\end{bmatrix}"
+autocmd FileType tex let g:Tex_Env_bmatrix = "\\begin{bmatrix}\<CR>\<CR>\\end{bmatrix}"
 
 " netrw
 let g:netrw_winsize = 30
 let g:netrw_browse_split = 3
+
+autocmd FileType cpp setlocal equalprg=clang-format
+
+" syntastic with pylint
+autocmd FileType python let g:syntastic_python_pylint_args = '--rcfile='.g:FindPylintrc().' -E'
+
+" test_runner
+map <leader>t :call g:RunTest()
+command! Gcc :call g:CompileRun()
