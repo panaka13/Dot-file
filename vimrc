@@ -115,9 +115,13 @@ let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_max_diagnostics_to_display = 0
 let g:ycm_enable_diagnostic_highlighting = 0
 let g:ycm_always_populate_location_list = 1
+let g:ycm_goto_buffer_command = 'new-tab'
+let g:ycm_disable_for_files_larger_than_kb = 2000
 " let g:ycm_filetype_blacklist = {'python': 1}
-map <F4> :YcmCompleter FixIt<CR>
+map <F5> :YcmCompleter FixIt<CR>
 map <c-g> :YcmCompleter GoTo<CR>
+map <c-l><c-n> :lnext<CR>
+map <c-l><c-p> :lprev<CR>
 
 " highlight after 80 columns
 set colorcolumn=81 
@@ -131,7 +135,8 @@ autocmd FileType java set colorcolumn=100 " java: 100 width per line
 " highlight search
 set hlsearch
 
-map <F3> :echo 'Current time is ' . strftime('%c')<CR>
+map <F4> :f<CR>
+map <F3> :pwd<CR>
 map <F2> :Vexplore<CR>
 
 " latex - vim-latex
@@ -140,6 +145,7 @@ autocmd FileType tex let g:Tex_Env_bmatrix = "\\begin{bmatrix}\<CR>\<CR>\\end{bm
 " netrw
 let g:netrw_winsize = 30
 let g:netrw_browse_split = 3
+let g:netrw_bufsettings = 'noma nomod nu nobl nowrap ro'
 
 autocmd FileType cpp setlocal equalprg=clang-format
 
@@ -149,3 +155,15 @@ autocmd FileType python let g:syntastic_python_pylint_args = '--rcfile='.g:FindP
 " test_runner
 map <leader>t :call g:RunTest()
 command! Gcc :call g:CompileRun()
+
+" golang run
+command! Go :call g:CompileRun()
+autocmd Filetype go setlocal equalprg=gofmt
+autocmd Filetype go set tabstop=4
+autocmd Filetype go set shiftwidth=4
+autocmd Filetype go set softtabstop=4
+
+set exrc
+set secure
+
+autocmd BufEnter * call g:ApplyLocalSettings(expand("<afile>:p:h"))
