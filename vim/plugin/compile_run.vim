@@ -16,5 +16,7 @@ function! s:CompileRunCmd()
     return l:prompt.l:cmd
   elseif expand("%:e") == "py"
     return l:prompt."python3 ".l:current_file
+  elseif expand("%:e") == "go"
+    return l:prompt."go run ".l:current_file." << in.txt"
   endif
 endfunction
